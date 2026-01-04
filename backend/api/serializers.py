@@ -17,7 +17,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     "<", ">", "?", "|", "`", "~", " "]
         if len(data["username"]) > 16 or len(data["username"]) < 4 or data["username"].strip() != data["username"] or any(str(ch) in data["username"] for ch in forbidden):
             raise serializers.ValidationError("Incorrect Username")
-        if not data["email"].contains("@"):
+        if not "@" in data["email"]:
             raise serializers.ValidationError("Incorrect Email")
         if len(data["password"]) > 16 or len(data["password"]) < 6 or data["password"] != data["confirm_password"]:
             raise serializers.ValidationError("Incorrect Password")
@@ -54,3 +54,10 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise serializers.ValidationError("Invalid Credentials")
         
         return super().validate({"email": email, "password": password})
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'followers' 'date_joined']
